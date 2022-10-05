@@ -7,6 +7,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import RegisterUser from './pages/Register';
 import ResetPassword from './pages/forgotPassword';
 import Landing from './pages/landingPage';
+import More from './pages/moreDetails';
 
 
 
@@ -54,10 +55,11 @@ export default function App() {
       <Stack.Navigator initialRouteName='Landing' screenOptions={{
         headerShown: false,
       }}>
-      <Stack.Screen name="Landing" component={Landing}/>
+      <Stack.Screen name="landingPage" component={Landing}/>
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Register" component={RegisterUser} />
         <Stack.Screen name="forgotPassword" component={ResetPassword} />
+        <Stack.Screen name="moreDetails" component={More} />     
 
       </Stack.Navigator>
     </NavigationContainer>

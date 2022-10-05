@@ -6,9 +6,14 @@ import {
   Pressable,TouchableOpacity, FlatList, ScrollView
 } from "react-native";
 import React, { useEffect } from "react";
+import react from "react";
 
-const Landing = () => {
+const Landing = ({navigation}) => {
     const [filteredData,setFilteredData]=React.useState("");
+    const [cartItems,setCartItems]=React.useState([]);
+    const [cartCount,setCartCount]=React.useState([]);
+    const [total,setTotal]=React.useState(0);
+
   const data = [
     {
       name: "Beef burger",
@@ -82,9 +87,13 @@ const Landing = () => {
       },
     
   ];
+
+  const totalToPay = cartItems.reduce((amount, product)=> amount + product.price * product.quantity,0)
   useEffect(() => {
     setFilteredData(data.filter((dat)=>{return dat}))
+  
   }, []);
+ 
  const filtering=["All meals","Burgers","Promotions","Wings","Family deals"]
  const handleFilter=(index,x)=>
  
@@ -107,9 +116,27 @@ const Landing = () => {
      })  
      
     ) 
-    console.log(filtering[x])
+  
  
  }
+
+ const handleAdd=(index,item)=>{
+  const itemExist= cartItems.find((product)=>product.name===item.name);
+  
+  if(itemExist)
+  {
+    setCartItems(cartItems.map((product)=>product.name===item.name?{...itemExist,quantity:itemExist.quantity+1}:product))
+    console.log('already exits and added')
+  }
+  else{
+    setCartItems([...cartItems,{...item,quantity:1}])
+    console.log('added')
+  }
+  setCartCount([...cartItems,{...item,quantity:1}])
+    console.log(cartItems);
+  
+ 
+}
   return (
     <View style={{ flex: 1, alignItems: "center", backgroundColor: "white" }}>
       <View
@@ -122,17 +149,34 @@ const Landing = () => {
           style={styles.logo}
         />
         <TouchableOpacity style={styles.back}>
-
+        <Image
+          source={
+            require('../assets/back.png')
+          }
+          style={{width:25,height:25,marginLeft:'auto',marginRight:'auto'}}
+        />
         </TouchableOpacity>
         <TouchableOpacity style={styles.search}>
-
+        <Image
+          source={
+            require('../assets/search.png')
+          }
+          style={{width:25,height:25,marginLeft:'auto',marginRight:'auto'}}
+        />
         </TouchableOpacity>
         <TouchableOpacity style={styles.cart}>
-
+        <Image
+          source={
+            require('../assets/cart.png')
+          }
+          style={{width:30,height:30,marginTop:10}}
+        />
+        <Text style={{fontWeight:500,fontSize:17,marginTop:23,color:'#E85800'}}>{cartCount.length}</Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.wrapper}>
+      <TouchableOpacity style={{width: '53px',height: '5px',background: '#D9D9D9',borderRadius: '3px',marginTop: -15}}></TouchableOpacity>
         <Text style={{ fontWeight: 700, fontSize: 20,marginLeft:-200}}>PLK Kitchen</Text>
         <View style={{width:'88%',overflow:'scroll',marginTop:15, disply:'flex',flexDirection:'row'}}>
            {filtering.map((type,index)=>(
@@ -144,22 +188,24 @@ const Landing = () => {
     <FlatList
       data={filteredData}
       renderItem={({item,index}) =>(
-        <TouchableOpacity key={index} style={{margin:18,marginTop:20,alignItems:'center'}}>
+        <TouchableOpacity key={index} style={{margin:18,marginTop:20,alignItems:'center'}} onPress={()=>{navigation.navigate('moreDetails',{data:filteredData[index],total:totalToPay,cart:cartItems})}}>
         <Image source={item.image} style={{ width: 140, height: 140, borderRadius:15}} />
         <View style={{display:'fex', flexDirection: 'row',alignItems: 'center'}}>
         <View>
         <Text style={{fontWeight:500}}> {item.name}</Text>
         <Text style={{fontWeight:500}}> R{item.price}.00</Text>
         </View>
-        <TouchableOpacity style={styles.btnAdd}>
+        <TouchableOpacity style={styles.btnAdd} onPress={()=>handleAdd(index,item)}>
             <Text style={{fontSize:23}}>+</Text>
         </TouchableOpacity>
         </View>
       </TouchableOpacity>        
       )}  numColumns={2}/>   
       <View style={styles.bottomView}>
+        <Text style={{color:'white',fontSize:18,fontWeight:500,marginLeft:80,marginTop:20}}>R {totalToPay}.00</Text>
+        <Text style={{color:'#D9D9D9',fontWeight:500,marginLeft:88}}>{cartItems.length} Items</Text>
         <TouchableOpacity style={styles.checkoutBtn}>
-          <Text style={{color:'white',fontWeight:500}}>Checkout</Text>
+          <Text style={{color:'white',fontWeight:500}}  >Checkout</Text>
         </TouchableOpacity>
       </View>
       </View>
@@ -229,7 +275,8 @@ const styles = StyleSheet.create({
       left: '24px',
       top: '41px',
       borderRadius:'50%',
-      backgroundColor: 'rgba(217, 217, 217, 0.75)'
+      backgroundColor: 'rgba(217, 217, 217, 0.75)',
+      justifyContent:'center'
     },
     search:{
       position: 'absolute',
@@ -238,7 +285,8 @@ const styles = StyleSheet.create({
       left: '166px',
       top: '41px',
       borderRadius:'50%',
-      backgroundColor: 'rgba(217, 217, 217, 0.75)'
+      backgroundColor: 'rgba(217, 217, 217, 0.75)',
+      justifyContent:'center'
     },
     cart:{
       position: 'absolute',
@@ -247,7 +295,9 @@ const styles = StyleSheet.create({
       left: '229px',
       top: '41px',
       borderRadius:'50%',
-      backgroundColor: 'rgba(217, 217, 217, 0.75)'
+      backgroundColor: 'rgba(217, 217, 217, 0.75)',
+      justifyContent:'center',
+      flexDirection:'row'
     }
 });
 
