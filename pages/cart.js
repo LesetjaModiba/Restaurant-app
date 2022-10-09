@@ -6,21 +6,22 @@ import {
     Pressable,TouchableOpacity, FlatList, ScrollView
   } from "react-native";
 
-const  More= ({route,navigation}) => {
+const  Cart= ({route,navigation}) => {
     const {data}=route.params;
     const {total}=route.params;
     const {cart}=route.params;
     console.log('cart',cart)
 
 
-    console.log(data)
     return ( 
         <View style={{ flex: 1, alignItems: "center", backgroundColor: "white" }}>
         <View
-          style={{width: "100%", height: "45%", backgroundColor: "white", alignItems: "center", justifyContent: "center"}}
+          style={{width: "100%", height: "30%", backgroundColor: "white", alignItems: "center", justifyContent: "center"}}
         >
-          <Image
-            source={data.image}
+           <Image
+            source={
+              "https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80"
+            }
             style={styles.logo}
           />
           <TouchableOpacity style={styles.back} onPress={()=>navigation.navigate('landingPage')}>
@@ -32,29 +33,31 @@ const  More= ({route,navigation}) => {
           />
           
           </TouchableOpacity>
-          <TouchableOpacity style={styles.cart} onPress={()=>{navigation.navigate('cart',{total:total,cart:cart})}}>
-          <Image
-            source={
-              require('../assets/cart.png')
-            }
-            style={{width:30,height:30,marginTop:10}}
-          />
-          <Text style={{fontWeight:500,fontSize:17,marginTop:23,color:'#E85800'}}>{cart.length}</Text>
-          </TouchableOpacity>
+        
         </View>
   
         <View style={styles.wrapper}>
             <TouchableOpacity style={{width: '53px',height: '5px',background: '#D9D9D9',borderRadius: '3px',marginTop: -15}}></TouchableOpacity>
-            <View style={{flexDirection:'row'}}>
-            <Text style={{color:'#2B2C34',fontWeight:700,fontSize:24,marginTop:20}}>{data.name}</Text>
+           <Text style={{fontSize:27,fontWeight:600,marginLeft:'-80%'}}>Cart</Text>
+
+           <FlatList
+        data={cart}
+        renderItem={({item,i}) =>(
+            <View key={i} style={styles.card}>
+            <Image
+            source={item.image} style={{width:80,height:80,borderRadius:14}}/>
+           <View style={{alignItems:'center'}}>
+           <Text style={{fontSize:22,fontWeight:700}}>{item.name}</Text>
+            <Text style={{fontSize:18,fontWeight:500}}>R{item.price}.00</Text>
+           </View>
+            <View>
+            <Text style={{fontSize:28,fontWeight:700}}></Text>
+            <Text style={{fontSize:22,fontWeight:700}}>{item.quantity}</Text>
+            <Text style={{fontSize:28,fontWeight:700}}></Text>
             </View>
-            <View style={{textAlign:'left',width:'85%',padding:'1%'}}>
-                <Text style={{fontSize:20,fontWeight:500,color:'#2B2C34',marginTop:20}}>Size: {data.size}</Text>
-                <Text style={{fontSize:20,fontWeight:500,color:'#2B2C34',marginTop:20}}>Igredients:</Text>
-                <Text style={{fontSize:17,color:'#2B2C34',marginTop:20}}>{data.description}</Text>
-                <Text style={{color:'#2B2C34',fontWeight:700,fontSize:30,marginTop:20}}>R{data.price}.00</Text>
-                <Text>  each</Text>
-            </View>
+        </View>
+        )} style={{width:'100%'}}/> 
+
         <View style={styles.bottomView}>
           <Text style={{color:'white',fontSize:18,fontWeight:500,marginLeft:80,marginTop:20}}>R {total}.00</Text>
           <Text style={{color:'#D9D9D9',fontWeight:500,marginLeft:88}}>{cart.length} Items</Text>
@@ -79,7 +82,7 @@ const styles = StyleSheet.create({
     },
     wrapper:{
       width: "100%",
-      height: "60%",
+      height: "80%",
       backgroundColor: "white",
       borderTopEndRadius: 21,
       borderTopStartRadius: 21,
@@ -130,8 +133,18 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(217, 217, 217, 0.75)',
         justifyContent:'center',
         flexDirection:'row'
+      },
+      card:{
+        marginTop:10,
+        borderRadius:16,
+        flexDirection:'row',
+        justifyContent:'space-around',
+        alignItems:'center',
+        width:'100%',
+        height:120,
+        elevation:3
       }
   });
   
  
-export default More;
+export default Cart;

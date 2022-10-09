@@ -12,7 +12,6 @@ import {
       const [filteredData,setFilteredData]=React.useState("");
       const [cartItems,setCartItems]=React.useState([]);
       const [cartCount,setCartCount]=React.useState([]);
-      const [total,setTotal]=React.useState(0);
   
     const data = [
       {
@@ -91,7 +90,6 @@ import {
     const totalToPay = cartItems.reduce((amount, product)=> amount + product.price * product.quantity,0)
     useEffect(() => {
       setFilteredData(data.filter((dat)=>{return dat}))
-    
     }, []);
    
    const filtering=["All meals","Burgers","Promotions","Wings","Family deals"]
@@ -164,7 +162,7 @@ import {
             style={{width:25,height:25,marginLeft:'auto',marginRight:'auto'}}
           />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.cart}>
+          <TouchableOpacity style={styles.cart} onPress={()=>{navigation.navigate('cart',{total:totalToPay,cart:cartItems})}}>
           <Image
             source={
               require('../assets/cart.png')
@@ -172,6 +170,14 @@ import {
             style={{width:30,height:30,marginTop:10}}
           />
           <Text style={{fontWeight:500,fontSize:17,marginTop:23,color:'#E85800'}}>{cartCount.length}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.profile} onPress={()=>{navigation.navigate('profile')}}>
+          <Image
+            source={
+              require('../assets/cart.png')
+            }
+            style={{width:30,height:30,marginTop:10}}
+          />
           </TouchableOpacity>
         </View>
   
@@ -204,7 +210,7 @@ import {
         <View style={styles.bottomView}>
           <Text style={{color:'white',fontSize:18,fontWeight:500,marginLeft:80,marginTop:20}}>R {totalToPay}.00</Text>
           <Text style={{color:'#D9D9D9',fontWeight:500,marginLeft:88}}>{cartItems.length} Items</Text>
-          <TouchableOpacity style={styles.checkoutBtn}>
+          <TouchableOpacity style={styles.checkoutBtn} onPress={()=>{navigation.navigate('payment',{total:totalToPay,cart:cartItems})}}>
             <Text style={{color:'white',fontWeight:500}}  >Checkout</Text>
           </TouchableOpacity>
         </View>
@@ -293,6 +299,17 @@ import {
         width: '52px',
         height: '52px',
         left: '229px',
+        top: '41px',
+        borderRadius:'50%',
+        backgroundColor: 'rgba(217, 217, 217, 0.75)',
+        justifyContent:'center',
+        flexDirection:'row'
+      },
+      profile:{
+        position: 'absolute',
+        width: '52px',
+        height: '52px',
+        left: '292px',
         top: '41px',
         borderRadius:'50%',
         backgroundColor: 'rgba(217, 217, 217, 0.75)',

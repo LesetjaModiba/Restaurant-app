@@ -8,6 +8,10 @@ import RegisterUser from './pages/Register';
 import ResetPassword from './pages/forgotPassword';
 import Landing from './pages/landingPage';
 import More from './pages/moreDetails';
+import Cart from './pages/cart';
+import Order from './pages/order';
+import Payment from './pages/payment';
+import Profile from './pages/profile';
 
 
 
@@ -56,10 +60,15 @@ export default function App() {
         headerShown: false,
       }}>
       <Stack.Screen name="landingPage" component={Landing}/>
+      <Stack.Screen name="cart" component={Cart}/>
+      <Stack.Screen name="payment" component={Payment}/>
+      <Stack.Screen name="order" component={Order}/>
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Register" component={RegisterUser} />
         <Stack.Screen name="forgotPassword" component={ResetPassword} />
-        <Stack.Screen name="moreDetails" component={More} />     
+        <Stack.Screen name="moreDetails" component={More} />
+        <Stack.Screen name="profile" component={Profile} /> 
+
 
       </Stack.Navigator>
     </NavigationContainer>
