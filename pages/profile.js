@@ -5,11 +5,11 @@ import {
     Image,
     TextInput
   } from "react-native";
-import { TouchableOpacity } from "react-native-web";
+import { TouchableOpacity } from "react-native";
 
-  import image from '../assets/logo.PNG';
+  import image from '../assets/logo.png';
 
-const  Profile= () => {
+const  Profile= ({navigation}) => {
 
     return ( 
         <View style={{ flex: 1, alignItems: 'center', backgroundColor: 'white' }}>
@@ -30,7 +30,7 @@ const  Profile= () => {
         <View style={{width:120,height:120,}}>
           <Image
             source={
-              require('../assets/back.png')
+              require('../assets/profile.png')
             }
             style={{width:100,height:100,marginLeft:'auto',marginRight:'auto'}}
           /></View>
