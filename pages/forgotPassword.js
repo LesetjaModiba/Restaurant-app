@@ -1,11 +1,18 @@
 import React from "react";
-import { StyleSheet, Text, View, TextInput, Image } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity } from 'react-native';
 import icon from '../assets/logo.png'
 
 
 function ResetPassword() {
     return (
         <View style={{ flex: 1, alignItems: 'center', backgroundColor: 'white' }}>
+             <TouchableOpacity style={styles.back} onPress={()=>navigation.navigate('landingPage')}>
+        <Image
+          source={
+            require('../assets/back.png')
+          }
+          style={{width:25,height:25,marginLeft:'auto',marginRight:'auto'}}
+        /></TouchableOpacity>
             <View style={{ width: '100%', height: '50%', backgroundColor: 'white', alignItems: 'center', justifyContent: 'center' }}>
                 <Image source={icon} style={styles.logo} />
             </View>
@@ -82,6 +89,16 @@ const styles = StyleSheet.create({
         borderTopColor: '#2B2C34',
 
     },
+    back:{
+        position: 'absolute',
+        width: '52px',
+        height: '52px',
+        left: '24px',
+        top: '41px',
+        borderRadius:'50%',
+        backgroundColor: 'rgba(217, 217, 217, 0.75)',
+        justifyContent:'center'
+      },
 });
 
 export default ResetPassword

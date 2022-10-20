@@ -32,7 +32,7 @@ function RegisterUser() {
       };
       addDoc(UsersCollectionRef, userDetails)
                }).then(()=>{ 
-               Alert.alert("Successfully Registered")}).catch((error)=> {
+               Alert.alert("Successfully Registered")}),navigation.navigate("Home").catch((error)=> {
             console.log(error);
         })
 

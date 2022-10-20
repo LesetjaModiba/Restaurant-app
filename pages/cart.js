@@ -47,7 +47,7 @@ const  Cart= ({route,navigation}) => {
           <Image
           source={item.image} style={{width:80,height:80,borderRadius:14}}/>
          <View style={{alignItems:'center'}}>
-         <Text style={{fontSize:22,fontWeight:700}}>{item.name}</Text>
+         <Text style={{fontSize:22,fontWeight:700}}>{item.foodName}</Text>
           <Text style={{fontSize:18,fontWeight:500}}>R{item.price}.00</Text>
          </View>
           <View>

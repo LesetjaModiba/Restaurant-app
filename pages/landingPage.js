@@ -6,7 +6,7 @@ import {
   Pressable,TouchableOpacity, FlatList, ScrollView, Alert
 } from "react-native";
 import React, { useEffect } from "react";
-import { collection} from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
 import { db,storage } from '../config/firebase';
 
 
@@ -14,105 +14,110 @@ const Landing = ({navigation}) => {
     const [filteredData,setFilteredData]=React.useState("");
     const [cartItems,setCartItems]=React.useState([]);
     const [cartCount,setCartCount]=React.useState([]);
-    // const [data,setData]=React.useState([])
-    
-    const menuRef = collection(db,"food Menu")
-  const data = [
-    {
-      name: "Beef burger",
-      price: 60,
-      image:
-        "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80",
-      size: "medium",
-      description:
-        "Ground beef, onion, cheese, soy sauce, Worcestershire sauce, egg, onion soup mix, garlic, garlic powder, parsley, basil, oregano, rosemary, salt, and pepper.",
-      category:'Burgers'
-    },
-    {
-      name: "Cheese burger",
-      price: 65,
-      image:
-        "https://images.unsplash.com/photo-1551782450-17144efb9c50?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80",
-      size: "medium",
-      description:
-        "Ground beef, onion, cheese, soy sauce, Worcestershire sauce, egg, onion soup mix, garlic, garlic powder, parsley, basil, oregano, rosemary, salt, and pepper.",
-        category:'Burgers'
-    },
-    {
-      name: "Chicken burger",
-      price: 55,
-      image:
-        "https://images.unsplash.com/photo-1572802419224-296b0aeee0d9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1115&q=80",
-      size: "medium",
-      description:
-        "Ground beef, onion, cheese, soy sauce, Worcestershire sauce, egg, onion soup mix, garlic, garlic powder, parsley, basil, oregano, rosemary, salt, and pepper.",
-        category:'Burgers'
-    },
-    {
-      name: "Buffalo wings",
-      price: 60,
-      image:
-        "https://images.unsplash.com/photo-1614398750956-402891a7dce1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80",
-      size: "medium",
-      description:
-        "Ground beef, onion, cheese, soy sauce, Worcestershire sauce, egg, onion soup mix, garlic, garlic powder, parsley, basil, oregano, rosemary, salt, and pepper.",
-        category:'Wings'
-    },
-    {
-      name: "Family feast 1",
-      price: 170,
-      image:
-        "https://images.unsplash.com/photo-1577303935007-0d306ee638cf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1140&q=80",
-      size: "medium",
-      description:
-        "Ground beef, onion, cheese, soy sauce, Worcestershire sauce, egg, onion soup mix, garlic, garlic powder, parsley, basil, oregano, rosemary, salt, and pepper.",
-        category:'Family deals'
-    },
-    {
-      name: "Family feast 2",
-      price: 250,
-      image:
-        "https://images.unsplash.com/photo-1526016650454-68a6f488910a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80",
-      size: "medium",
-      description:
-        "Ground beef, onion, cheese, soy sauce, Worcestershire sauce, egg, onion soup mix, garlic, garlic powder, parsley, basil, oregano, rosemary, salt, and pepper.",
-        category:'Family deals'
-    },
-    {
-        name: "Family feast 3",
-        price: 270,
-        image:
-          "https://images.unsplash.com/photo-1526016650454-68a6f488910a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80",
-        size: "medium",
-        description:
-          "Ground beef, onion, cheese, soy sauce, Worcestershire sauce, egg, onion soup mix, garlic, garlic powder, parsley, basil, oregano, rosemary, salt, and pepper.",
-          category:'Promotions'
-      },
-    
-  ];
+    const [data,setData]=React.useState([])
 
+    const menuRef = collection(db,"menu")
+  // const data = [
+  //   {
+  //     name: "Beef burger",
+  //     price: 60,
+  //     image:
+  //       "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80",
+  //     size: "medium",
+  //     description:
+  //       "Ground beef, onion, cheese, soy sauce, Worcestershire sauce, egg, onion soup mix, garlic, garlic powder, parsley, basil, oregano, rosemary, salt, and pepper.",
+  //     category:'Burgers'
+  //   },
+  //   {
+  //     name: "Cheese burger",
+  //     price: 65,
+  //     image:
+  //       "https://images.unsplash.com/photo-1551782450-17144efb9c50?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80",
+  //     size: "medium",
+  //     description:
+  //       "Ground beef, onion, cheese, soy sauce, Worcestershire sauce, egg, onion soup mix, garlic, garlic powder, parsley, basil, oregano, rosemary, salt, and pepper.",
+  //       category:'Burgers'
+  //   },
+  //   {
+  //     name: "Chicken burger",
+  //     price: 55,
+  //     image:
+  //       "https://images.unsplash.com/photo-1572802419224-296b0aeee0d9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1115&q=80",
+  //     size: "medium",
+  //     description:
+  //       "Ground beef, onion, cheese, soy sauce, Worcestershire sauce, egg, onion soup mix, garlic, garlic powder, parsley, basil, oregano, rosemary, salt, and pepper.",
+  //       category:'Burgers'
+  //   },
+  //   {
+  //     name: "Buffalo wings",
+  //     price: 60,
+  //     image:
+  //       "https://images.unsplash.com/photo-1614398750956-402891a7dce1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80",
+  //     size: "medium",
+  //     description:
+  //       "Ground beef, onion, cheese, soy sauce, Worcestershire sauce, egg, onion soup mix, garlic, garlic powder, parsley, basil, oregano, rosemary, salt, and pepper.",
+  //       category:'Wings'
+  //   },
+  //   {
+  //     name: "Family feast 1",
+  //     price: 170,
+  //     image:
+  //       "https://images.unsplash.com/photo-1577303935007-0d306ee638cf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1140&q=80",
+  //     size: "medium",
+  //     description:
+  //       "Ground beef, onion, cheese, soy sauce, Worcestershire sauce, egg, onion soup mix, garlic, garlic powder, parsley, basil, oregano, rosemary, salt, and pepper.",
+  //       category:'Family deals'
+  //   },
+  //   {
+  //     name: "Family feast 2",
+  //     price: 250,
+  //     image:
+  //       "https://images.unsplash.com/photo-1526016650454-68a6f488910a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80",
+  //     size: "medium",
+  //     description:
+  //       "Ground beef, onion, cheese, soy sauce, Worcestershire sauce, egg, onion soup mix, garlic, garlic powder, parsley, basil, oregano, rosemary, salt, and pepper.",
+  //       category:'Family deals'
+  //   },
+  //   {
+  //       name: "Family feast 3",
+  //       price: 270,
+  //       image:
+  //         "https://images.unsplash.com/photo-1526016650454-68a6f488910a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80",
+  //       size: "medium",
+  //       description:
+  //         "Ground beef, onion, cheese, soy sauce, Worcestershire sauce, egg, onion soup mix, garlic, garlic powder, parsley, basil, oregano, rosemary, salt, and pepper.",
+  //         category:'Promotions'
+  //     },
+    
+  // ];
+
+ 
   const totalToPay = cartItems.reduce((amount, product)=> amount + product.price * product.quantity,0)
 
-//   const getMenu = async () => {
-//     const data = await getDocs(menuRef)
+  const getMenu = async () => {
+    const data = await getDocs(menuRef)
 
-//     console.log(data.docs.map((results)=>(results.data())))
-//     setData(data.docs.map((results)=>({...results.data(),id:results.id})));
-// }
+    console.log(data.docs.map((results)=>(results.data())))
+ 
+    setData(data.docs.map((results)=>({...results.data(),id:results.id})))
+    setFilteredData(data.docs.map((results)=>({...results.data(),id:results.id})))
+    ;
+}
 
   useEffect(() => {
-    // getMenu()
-    setFilteredData(data.filter((dat)=>{return dat}))
-  }, []);
+    getMenu()
+    // setFilteredData(data.filter((dat)=>{return dat}))
+
+  },[]);
  
- const filtering=["All meals","Burgers","Promotions","Wings","Family deals"]
+ console.log('fkitered',filteredData)
+ const filtering=["All meals","Burgers","Pizza","Promotions","Wings","Family deals"]
  const handleFilter=(index,x)=>
  
  {
-
-    setFilteredData(data.filter((type,i)=>{
-           
     
+    setFilteredData(data.filter((type,i)=>{
+            
          if (index == "All meals") {
        
             return type
@@ -122,20 +127,17 @@ const Landing = ({navigation}) => {
        {
          return type;
        }
-
      })  
      
     ) 
-  
- 
  }
 
  const handleAdd=(index,item)=>{
-  const itemExist= cartItems.find((product)=>product.name===item.name);
+  const itemExist= cartItems.find((product)=>product.foodName===item.foodName);
   
   if(itemExist)
   {
-    setCartItems(cartItems.map((product)=>product.name===item.name?{...itemExist,quantity:itemExist.quantity+1}:product))
+    setCartItems(cartItems.map((product)=>product.foodName===item.foodName?{...itemExist,quantity:itemExist.quantity+1}:product))
     console.log('already exits and added')
   }
   else{
@@ -222,7 +224,7 @@ const handleBack=()=>{alert('Are you sure you want to log out?')
         <Text 
         // style={{fontWeight:500}}
         >
-           {item.name}</Text>
+           {item.foodName}</Text>
         
         <Text 
         // style={{fontWeight:500}}

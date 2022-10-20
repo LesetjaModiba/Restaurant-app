@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TextInput, Image } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import image from './assets/logo.png';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -13,13 +13,37 @@ import Order from './pages/order';
 import Payment from './pages/payment';
 import Profile from './pages/profile';
 import { TouchableOpacity} from 'react-native';
+import {signInWithEmailAndPassword} from 'firebase/auth';
+import {auth} from './config/firebase';
 
 
 
 function HomeScreen({navigation}) {
-  const handleSignIn=()=>(
-   navigation.navigate('landingPage')
-  )
+  const [email,setEmail] = useState('');
+  const [password,setPassword] = useState('');
+
+  const login = () => { 
+    signInWithEmailAndPassword(auth,email,password).then(()=>{
+      if (email !== "" && password !== ""){
+        navigation.navigate("landingPage");
+        Alert.alert("Successfully Logged In")
+      }else{
+        Alert.alert("Inputs can not be empty")
+        console.log("Inputs can not be empty");
+      }
+
+    }).catch((error)=>{
+      console.log(error);
+    })
+  }
+   //link to sign up page
+   const signUp = () => {
+    navigation.navigate('Register')
+  }
+  //link to reset password
+  const forgotPassword = () => {
+    navigation.navigate('forgotPassword')
+  }
   return (
     <View style={{ flex: 1, alignItems: 'center', backgroundColor: 'white' }}>
       <View style={{ width: '100%', height: '50%', backgroundColor: 'white', alignItems: 'center', justifyContent: 'center' }}>
@@ -27,23 +51,40 @@ function HomeScreen({navigation}) {
       </View>
 
       <View style={{ width: '100%', height: "50%", backgroundColor: "#2B2C34", borderTopEndRadius: 21, borderTopStartRadius: 21 }}>
-        <Text style={styles.signIn} >Sign In</Text>
+        <Text style={styles.signIn}>Sign In</Text>
         <TextInput
           style={styles.input}
+          onChangeText={(text)=>setEmail(text)}
+          value={email}
           placeholder="Email Adress" />
-
         <TextInput
           style={styles.input}
+          onChangeText={(text)=>setPassword(text)}
+          value={password}
+          secureTextEntry
           placeholder="Password" />
-        <Text style={{ color: "white", textAlign: 'center', margin: 10 }} onPress={()=>navigation.navigate('Register')}>Don't Have Account?</Text>
+        <Text style={{ color: "white", textAlign: 'center', margin: 10 }} onPress={signUp}>
+          Don't Have Account?
+        </Text>
 
-        <Text style={{ color: "white", textAlign: 'center', margin: 10 }} onPress={()=>navigation.navigate('forgotPassword')}>Forgot Password?</Text>
-
-        <TouchableOpacity style={{
-          backgroundColor: '#E85800',textAlign: 'center',padding: 7,marginTop: 10,width: "50%",textAlign: 'center',borderRadius: 5,alignSelf:'center'
-        }}>
-          <Text style={{color: 'white'}} onPress={handleSignIn}>Sign In</Text>
+        <Text style={{ color: "white", textAlign: 'center', margin: 10 }} onPress={forgotPassword}>
+          Forgot Password?
+        </Text>
+        <TouchableOpacity>
+          <Text style={{
+            backgroundColor: '#E85800',
+            color: 'white',
+            textAlign: 'center',
+            padding: 7,
+            marginTop: 10,
+            width: "50%",
+            alignSelf: 'center',
+            borderRadius: 5
+          }} onPress={ login }>
+            Sign In
+          </Text>
         </TouchableOpacity>
+        
       </View>
     </View>
   );
