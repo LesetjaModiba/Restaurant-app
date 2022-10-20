@@ -6,7 +6,7 @@ import {
   Pressable,TouchableOpacity, FlatList, ScrollView, Alert
 } from "react-native";
 import React, { useEffect } from "react";
-import { collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
+import { collection} from 'firebase/firestore';
 import { db,storage } from '../config/firebase';
 
 
